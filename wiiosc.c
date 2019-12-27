@@ -137,6 +137,16 @@ void add_bundle_message_intfloat( lo_bundle * b, const char *path, int i, float 
 //  	lo_message_free( m );
 }
 
+void add_bundle_message_3float( lo_bundle * b, const char *path, float data1, float data2, float data3 )
+{
+	lo_message m = lo_message_new();
+	lo_message_add_float( m, data1 );
+	lo_message_add_float( m, data2 );
+	lo_message_add_float( m, data3 );
+	lo_bundle_add_message( *b, path, m );
+//  	lo_message_free( m );
+}
+
 void add_bundle_message_3int( lo_bundle * b, const char *path, int i, int j, int data )
 {
 	lo_message m = lo_message_new();
@@ -661,6 +671,10 @@ void cwiid_callback(cwiid_wiimote_t *wiimotet, int mesg_count,
 			add_bundle_message_intfloat( &b, "/wii/acc/x",  id, (float) mesg[i].acc_mesg.acc[CWIID_X] / CWIID_ACC_MAX);
 			add_bundle_message_intfloat( &b, "/wii/acc/y",  id, (float) mesg[i].acc_mesg.acc[CWIID_Y] / CWIID_ACC_MAX);
 			add_bundle_message_intfloat( &b, "/wii/acc/z",  id, (float) mesg[i].acc_mesg.acc[CWIID_Z] / CWIID_ACC_MAX);
+			add_bundle_message_3float( &b, "/wii/acc",
+				(float) mesg[i].acc_mesg.acc[CWIID_X] / CWIID_ACC_MAX,
+				(float) mesg[i].acc_mesg.acc[CWIID_Y] / CWIID_ACC_MAX,
+				(float) mesg[i].acc_mesg.acc[CWIID_Z] / CWIID_ACC_MAX);
 			break;
 		case CWIID_MESG_IR:
 			for (j = 0; j < CWIID_IR_SRC_COUNT; j++) {
