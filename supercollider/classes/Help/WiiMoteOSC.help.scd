@@ -1,0 +1,47 @@
+// check the path, where wiiosc lives:
+WiiMoteOSC.path
+
+// set the path differently from the default
+WiiMoteOSC.path = "/home/nescivi/svn/tuberlin/baalman/wiiosc/";
+
+WiiMoteOSC.start;
+
+WiiMoteOSC.discover;
+
+// all found Wii's in their lang representation
+WiiMoteOSC.all
+
+// get the first one:
+w = WiiMoteOSC.all[0];
+
+// do the rumble:
+w.rumble( 1 );
+w.rumble( 0 );
+
+// enable features:
+w.enableMotion( 1 );
+w.enableButtons( 1 );
+w.enableExtension( 1 );
+w.extension
+
+// turn an LED on:
+w.setLEDState( 1, 1 )
+
+// set an action:
+w.setAction( \bA, { |v| if ( v != w.spec.at( \bA ).value, { v.postln; } ); } );
+w.removeAction( \bA );
+
+
+// create a GUI to show data:
+v = WiiMoteGUI.new( w );
+
+w.battery
+
+// reconnect (get the info on the wii's again)
+WiiMoteOSC.info;
+
+// stop the program:
+WiiMoteOSC.stop;
+
+//WiiMoteOSC.makeResponders; // done inside .start
+//WiiMoteOSC.removeResponsers; // remove the responders

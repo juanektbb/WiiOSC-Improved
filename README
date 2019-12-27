@@ -1,0 +1,78 @@
+wiiosc is a very simple program that looks for up to four wii's, and sends osc data out to a port on your machine, of choice.
+
+----------------------BUILDING and INSTALLING----------------------------
+
+The program needs:
+liblo (http://liblo.sourceforge.net)
+cwiid (http://abstrakraft.org/cwiid/wiki) (as of version 0.2)
+and BlueZ
+
+just type "make" in the directory, and the application should build
+
+----------------------STARTING----------------------------
+
+$ wiiosc <targetport> <recvport> <targetip>
+where <targetport> is a string with the port the receiving application listens to,
+and <recvport> is a string with the port the application will receive data on,
+e.g.:
+$ wiiosc "57120" "57150" "192.168.1.7"
+
+if no arguments are given, then the application will send to "57120" on the localhost and listen to port "57150"
+
+If you want wiiosc to automatically discover wii's and enable everything on them, use this to startup:
+
+$ wiiosc "57120" "57150" "192.168.1.7" auto
+
+
+---------------------OPERATION-----------------------------
+
+"/wii/found" informs you of found devices, with an ID, and the address; the ID is later used in the data sent, and needed to send data to the device
+"/wii/connected" informs you of when the device is connected
+"/wii/disconnected" informs you of when the device is connected
+"/wii/error" informs you of an error
+"/wii/quit" informs you when there were no more devices connected and the program has quit
+
+For the data messages, look in the source code... it is quite clear, I think.
+
+Incoming messages:
+"/wii/discover", will look for a new wii device
+"/wii/extension", "i", get the extension type of device "i" (sends a message back "/wii/extension", "ii")
+"/wii/rumble", "ii", the device "i" will turn rumble on or off
+"/wii/leds", "iiiii", the device "i" will turn its leds on or off based on the four states
+"/wii/quit", will quit the application.
+
+-----------------------SUPERCOLLIDER---------------------------
+
+In the folder SuperCollider the needed files for SuperCollider are provided, to manage interaction with
+SuperCollider.
+A Help file is included.
+
+-----------------------CREDITS---------------------------
+
+June 2007 - January 2009, Marije Baalman
+nescivi _at_ gmail _dot_ com
+
+--------------------- CHANGELOG -------------------------
+v0.4 - October 2008
+
+* bug fix in freeing the liblo bundle (needs liblo > 0.25)
+
+v0.3 - April 2008
+
+* created an IP argument for the target address
+
+v0.2.1 - November 2007
+
+* Created an auto function for startup, which allows you to start discovery automatically upon starting the application.
+
+v0.2 - October 2007
+
+* Switched to using cwiid, instead of libwiimote, which has as an advantage that it has a callback mechanism.
+Data now comes in smoother, and there is no need to set an update time.
+Another advantage is that Debian has cwiid in its repository.
+
+* All data is now sent as data between 0 and 1.
+
+v0.1 - June 2007
+
+(version 0.1 used: libwiimote by Joel Andersson <bja _at_ kth _dot_ se>)
