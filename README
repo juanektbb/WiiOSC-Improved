@@ -1,3 +1,6 @@
+Source: http://www.nescivi.nl/wiiosc/
+Improved: https://github.com/juanektbb/WiiOSCv2
+
 wiiosc is a very simple program that looks for up to four wii's, and sends osc data out to a port on your machine, of choice.
 
 ----------------------BUILDING and INSTALLING----------------------------
