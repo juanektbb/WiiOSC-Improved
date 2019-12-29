@@ -167,6 +167,15 @@ void add_bundle_message_2intfloat( lo_bundle * b, const char *path, int i, int j
 // 	lo_message_free( m );
 }
 
+void add_bundle_message_2float( lo_bundle * b, const char *path, float data1, float data2 )
+{
+	lo_message m = lo_message_new();
+	lo_message_add_float( m, data1 );
+	lo_message_add_float( m, data2 );
+	lo_bundle_add_message( *b, path, m );
+// 	lo_message_free( m );
+}
+
 void set_bit( unsigned char * bf, unsigned char b )
 {
 // 	printf( "set bit %i %i\n", *bf, b );
@@ -684,6 +693,11 @@ void cwiid_callback(cwiid_wiimote_t *wiimotet, int mesg_count,
 					add_bundle_message_2intfloat( &b, "/wii/ir/x", id, j, (float) mesg[i].ir_mesg.src[j].pos[CWIID_X] / CWIID_IR_X_MAX);
 					add_bundle_message_2intfloat( &b, "/wii/ir/y", id, j, (float) mesg[i].ir_mesg.src[j].pos[CWIID_Y] / CWIID_IR_Y_MAX);
 // 				add_bundle_message_2int( &b, "/wii/ir/size", id, j, wiimote[i].ir1.size);
+
+					add_bundle_message_2float( &b, "/wii/ir", 
+						(float) mesg[i].ir_mesg.src[j].pos[CWIID_X] / CWIID_IR_X_MAX,
+						(float) mesg[i].ir_mesg.src[j].pos[CWIID_Y] / CWIID_IR_Y_MAX);
+
 					}
 				add_bundle_message_3int( &b, "/wii/ir/valid", id, j, valid_source );
 			}
