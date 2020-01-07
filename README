@@ -1,3 +1,5 @@
+Run: ./wiiosc "6448" "57150" "127.0.0.1" auto
+
 Source: http://www.nescivi.nl/wiiosc/
 Improved: https://github.com/juanektbb/WiiOSCv2
 
