@@ -54,6 +54,8 @@ unsigned char led_state[MAX_NMOTES];
 
 // unsigned char rpt_mode = 0;
 
+float isb;
+int boolean;
 
 int nmotes;
 int updtime;
@@ -208,9 +210,13 @@ int main(int argc, char **argv)
  	updtime = 100000;
 // 	updtime = 2000;
 
+
     nmotes = 0;
     done = 0;
 	
+    isb = 0.150;
+	boolean = 0;
+
     /* Print help information. */
 
 //     printf("argv: %s %s %s %s %s %i\n", argv[0], argv[1], argv[2], argv[3], argv[4], argc );
@@ -637,8 +643,56 @@ void cwiid_callback(cwiid_wiimote_t *wiimotet, int mesg_count,
 	printf( "mesg_count %i", mesg_count );
 	fflush( stdout );
 
-	for (i=0; i < mesg_count; i++)
-	{
+
+
+	//STOP PRESSING THE BUTTON B (NOT REALLY 100% ACCURATE BUT ENOUGH)
+	if(mesg_count == 3){
+		printf("%d \n", mesg_count);
+
+		if(boolean == 1){
+			boolean = 0;
+		}
+	}
+
+
+
+	for (i=0; i < mesg_count; i++){
+
+		
+
+		//IF BUTTON B IS PRESSED CHANGE THE BOOLEAN
+		if(mesg[i].type == CWIID_MESG_BTN && (CWIID_BTN_B & mesg[i].btn_mesg.buttons)   > 0){
+			printf("button b pressed %c", CWIID_BTN_B);
+			boolean = 1;
+		}
+
+		//GIVE DECIMAL VALUE TO BOOLEAN
+		if(boolean == 1){
+			isb = 0.750;
+		}else{
+			isb = 0.250;
+		}
+
+		//GET THE IR
+		for (j = 0; j < CWIID_IR_SRC_COUNT; j++) {
+			valid_source = 0;
+			if (mesg[i].ir_mesg.src[j].valid) {
+				valid_source = 1;
+
+				add_bundle_message_3float( &b, "/wii/irb", 
+					(float) mesg[i].ir_mesg.src[j].pos[CWIID_X] / CWIID_IR_X_MAX,
+					(float) mesg[i].ir_mesg.src[j].pos[CWIID_Y] / CWIID_IR_Y_MAX,
+					(float) isb
+					);
+
+				}
+
+		}
+
+		//CONTINUE TO AVOID SENDING MORE MESSAGES
+		continue;
+	
+
 		switch (mesg[i].type) {
 		case CWIID_MESG_STATUS:
 		    add_bundle_message_intfloat( &b, "/wii/battery", id, (float) mesg[i].status_mesg.battery / CWIID_BATTERY_MAX);
