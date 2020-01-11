@@ -57,6 +57,9 @@ unsigned char led_state[MAX_NMOTES];
 float isb;
 int boolean;
 
+float actualValueB;
+float lastvalueB;
+
 int nmotes;
 int updtime;
 lo_address t;
@@ -215,6 +218,8 @@ int main(int argc, char **argv)
     done = 0;
 	
     isb = 0.150;
+    lastvalueB = 0.0;
+    actualValueB = 0.1;
 	boolean = 0;
 
     /* Print help information. */
@@ -673,19 +678,31 @@ void cwiid_callback(cwiid_wiimote_t *wiimotet, int mesg_count,
 			isb = 0.250;
 		}
 
+
 		//GET THE IR
 		for (j = 0; j < CWIID_IR_SRC_COUNT; j++) {
 			valid_source = 0;
 			if (mesg[i].ir_mesg.src[j].valid) {
 				valid_source = 1;
 
+				actualValueB = (float) mesg[i].ir_mesg.src[j].pos[CWIID_Y] / CWIID_IR_Y_MAX;
+
+				if((float) mesg[i].ir_mesg.src[j].pos[CWIID_Y] / CWIID_IR_Y_MAX == 0.0){
+					actualValueB = lastvalueB;
+				}
+
+
+
+
 				add_bundle_message_3float( &b, "/wii/irb", 
 					(float) mesg[i].ir_mesg.src[j].pos[CWIID_X] / CWIID_IR_X_MAX,
-					(float) mesg[i].ir_mesg.src[j].pos[CWIID_Y] / CWIID_IR_Y_MAX,
+					(float) actualValueB,
 					(float) isb
 					);
 
 				}
+
+				lastvalueB = actualValueB;
 
 		}
 
